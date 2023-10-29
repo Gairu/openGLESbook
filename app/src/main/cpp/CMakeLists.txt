@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.22.1)
 # Since this is the top level CMakeLists.txt, the project name is also accessible
 # with ${CMAKE_PROJECT_NAME} (both CMake variables are in-sync within the top level
 # build script scope).
-project("openglesbook")
+project("opengles")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -24,8 +24,8 @@ project("openglesbook")
 # System.loadLibrary() and pass the name of the library defined here;
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
+include_directories(./)
 add_library(${CMAKE_PROJECT_NAME} SHARED
-        opengles
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         main.cpp
         utility/asset.cpp
@@ -57,5 +57,8 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 # build script, prebuilt third-party libraries, or Android system libraries.
 target_link_libraries(${CMAKE_PROJECT_NAME}
         # List libraries link to the target library
+        EGL
+        GLESv3
+        jnigraphics
         android
         log)

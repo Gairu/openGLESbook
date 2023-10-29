@@ -1,6 +1,9 @@
 #ifndef OPENGLES_MAIN_H
 #define OPENGLES_MAIN_H
 
+#include <jni.h>
+#include <string>
+
 #include "global.h"
 #include "utility/asset.h"
 #include "utility/input.h"
@@ -16,29 +19,28 @@ void touchEvent(const int motion, const float x, const float y);
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_kr_ac_korea_media_opengles_MainActivity_surfaceCreated(JNIEnv *env, jobject instance,
-                                                            jobject assetManager, jint id) {
-    surfaceCreated(AAssetManager_fromJava(env, assetManager), id);
+Java_com_example_openglesbook_MainActivity_surfaceCreated(JNIEnv *env, jobject thiz,
+                                                          jobject asset_manager, jint id) {
+    surfaceCreated(AAssetManager_fromJava(env, asset_manager), id);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_kr_ac_korea_media_opengles_MainActivity_surfaceChanged(JNIEnv *env, jobject instance,
-                                                            jint width, jint height) {
+Java_com_example_openglesbook_MainActivity_surfaceChanged(JNIEnv *env, jobject thiz, jint width,
+                                                          jint height) {
     surfaceChanged(width, height);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_kr_ac_korea_media_opengles_MainActivity_drawFrame(JNIEnv *env, jobject instance,
-                                                       jfloat deltaTime) {
-    drawFrame(deltaTime);
+Java_com_example_openglesbook_MainActivity_drawFrame(JNIEnv *env, jobject thiz, jfloat delta_time) {
+    drawFrame(delta_time);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_kr_ac_korea_media_opengles_MainActivity_touchEvent(JNIEnv *env, jobject instance, jint motion,
-                                                        jfloat x, jfloat y) {
+Java_com_example_openglesbook_MainActivity_touchEvent(JNIEnv *env, jobject thiz, jint motion,
+                                                      jfloat x, jfloat y) {
     touchEvent(motion, x, y);
 }
 

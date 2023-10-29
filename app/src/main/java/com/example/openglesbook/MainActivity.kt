@@ -1,24 +1,23 @@
 package com.example.openglesbook
 
+import android.content.Context
 import android.content.res.AssetManager
-import android.opengl.EGLConfig
 import android.opengl.GLSurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import com.example.openglesbook.databinding.ActivityMainBinding
+import android.view.MotionEvent
 import javax.microedition.khronos.opengles.GL10
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+    init {
+        System.loadLibrary("opengles")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+        // set content view to OpenGL ES surface view
+        setContentView(SurfaceView(this))
     }
 
     /**
@@ -32,8 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     private inner class SurfaceRenderer : GLSurfaceView.Renderer {
         private var lastTime = System.currentTimeMillis()
-        override fun onSurfaceCreated(gl10: GL10, eglConfig: EGLConfig) {
-            surfaceCreated(assets, intent.getIntExtra("id", 0)
+        override fun onSurfaceCreated(gl10: GL10, eglconfig: javax.microedition.khronos.egl.EGLConfig) {
+            surfaceCreated(assets, intent.getIntExtra("ExampleID", -1))
         }
 
         override fun onSurfaceChanged(gl10: GL10, width: Int, height: Int) {
@@ -41,28 +40,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onDrawFrame(gl10: GL10) {
+            // get current time
             val currentTime = System.currentTimeMillis()
+            // compute delta time
             val deltaTime =(currentTime - lastTime) / 1000.0f
-            lastTime = currentTime
-
+            // call native method
             drawFrame(deltaTime)
+            // update last time
+            lastTime = currentTime
         }
     }
 
     private inner class SurfaceView(context: Context) : GLSurfaceView(context) {
-        private val renderer: SurfaceRenderer
 
         init {
-            setEGLContextClientVersion(2)
-            renderer = SurfaceRenderer()
-            setRenderer(renderer)
+            setEGLContextClientVersion(3)
+            setRenderer(SurfaceRenderer())
         }
-    }
 
-    companion object {
-        // Used to load the 'openglesbook' library on application startup.
-        init {
-            System.loadLibrary("openglesbook")
+        override fun onTouchEvent(event: MotionEvent?): Boolean {
+            if (event != null) {
+                when (event.action){
+                    MotionEvent.ACTION_DOWN -> touchEvent(0, event.x, event.y)
+                    MotionEvent.ACTION_MOVE -> touchEvent(1, event.x, event.y)
+                    MotionEvent.ACTION_UP -> touchEvent(2, event.x, event.y)
+                }
+            }
+            return true
         }
     }
 }
